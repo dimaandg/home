@@ -26,7 +26,7 @@ Creating the tar archive can be achieved by manually assembling the needed files
 In order to assemble the required files, we first need to compile the Go code, which can achieved easily using JumpScale. We recommend using a JS9 Docker container for this, for the installation instructions see: https://github.com/Jumpscale/developer.
 
 From within your JS9 Docker container start the interactive JumpScale shell:
-```bash
+```shell
 js9
 ```
 
@@ -38,20 +38,28 @@ j.tools.prefab.local.development.golang.install()
 Then build the Echo Server, again using the JumpScale:
 ```python
 j.tools.prefab.local.development.golang.get('github.com/luisbebop/echo-server')
+exit
 ```
 
 As a result the Echo Server will be build, the result will be available in `/opt/jumpscale9/go/proj`:
-```bash
+```shell
 ls /opt/jumpscale9/go/proj/src/github.com/luisbebop/echo-server/
 Dockerfile  README.md  echo-server  main.go  main_test.go
 ```
 
 Now create the tar:
-```bash
+```shell
 mkdir -p /optvar/data/images/echo-server/usr/bin
-cp echo-server /optvar/data/images/echo-server/usr/bin
-cd /optvar/data/images/echo-server
+cp /opt/jumpscale9/go/proj/src/github.com/luisbebop/echo-server/echo-server /optvar/data/images/echo-server/usr/bin
 tar -cvzf /optvar/data/images/echo-server.tar.gz usr
+exit
+```
+
+Copy the container ID, and use it in the second command to export the `tar.gz` file
+to your home folder.
+```shell
+docker ps -a
+docker cp <container_id>:/optvar/data/images/echo-server.tar.gz /home/$USER
 ```
 
 ### Publishing the flist onto hub.gig.tech
